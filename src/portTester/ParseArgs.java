@@ -20,13 +20,12 @@ public class ParseArgs {
 	}
 
 	public void setOptions() {
-		char comma = ",".charAt(44);
 		options.addOption(Option.builder("p")
 								.longOpt("port")
+								.hasArg(true)
 								.hasArgs()
 								.required()
-								.valueSeparator(comma)
-								.desc("Port(s) to scan, delimeted by \",\"")
+								.desc("Port to scan")
 								.build());
 		options.addOption("s", "system", true, "System to scan");
 		options.addOption("h", "help", false, "Print help");
