@@ -7,17 +7,17 @@ import java.io.IOException;
 
 public class OpenFile {
 	String file;
-	
-	public OpenFile (String file){
+
+	public OpenFile(String file) {
 		this.file = file;
 	}
-	
-	public String[] getOMs (){
+
+	public String[] getOMs() {
 		String[] oms;
 		StringBuilder om = new StringBuilder();
 		String line = null;
 		BufferedReader br;
-		
+
 		try {
 			br = new BufferedReader(new FileReader(file));
 			while ((line = br.readLine()) != null) {
@@ -26,13 +26,13 @@ public class OpenFile {
 			}
 		}
 		catch (FileNotFoundException fe) {
-			System.out.println ("File does not exist " + file);
+			System.out.println("File does not exist " + file);
 			System.exit(1);
 		}
 		catch (IOException ie) {
-			System.out.println ("There is issue with reading a file " + file);
+			System.out.println("There is issue with reading a file " + file);
 			System.exit(1);
-			
+
 		}
 		oms = om.toString().split("\n");
 		return oms;
