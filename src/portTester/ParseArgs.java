@@ -22,8 +22,9 @@ public class ParseArgs {
 	public void setOptions() {
 		options.addOption(Option.builder("p").longOpt("port").hasArg(true).hasArgs().required(true).desc("Port to scan").build());
 		options.addOption("s", "system", true, "System to scan");
+		options.addOption(Option.builder("s").longOpt("system").hasArgs().desc("System to scan").build());
 		options.addOption(Option.builder("h").longOpt("help").required(false).desc("Print help").build());
-		options.addOption(Option.builder("f").longOpt("file").desc("File of hosts").build());
+		options.addOption(Option.builder("f").longOpt("file").hasArg().desc("File of hosts").build());
 		parseOptions();
 	}
 
@@ -41,7 +42,12 @@ public class ParseArgs {
 			if (cl.hasOption("h")) {
 				printHelp();
 			}
-		} catch (ParseException e) {
+
+			if ((cl.hasOption("s")) && (cl.hasOption("f"))) {
+				printHelp();
+			}
+		}
+		catch (ParseException e) {
 			printHelp();
 			// e.printStackTrace();
 		}
@@ -49,5 +55,18 @@ public class ParseArgs {
 
 	public CommandLine getParsedArgs() {
 		return cl;
+	}
+
+	public String[] getPorts() {
+		return cl.getOptionValues("p");
+	}
+
+	public String[] getServers() {
+		if (cl.hasOption("s")) {
+			return cl.getOptionValues("s");
+		} else {
+			OpenFile ff = new OpenFile(cl.getOptionValue("f"));
+			return ff.getOMs();
+		}
 	}
 }
