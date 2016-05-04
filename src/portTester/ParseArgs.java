@@ -1,5 +1,7 @@
 package portTester;
 
+import java.util.Arrays;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -14,17 +16,19 @@ public class ParseArgs {
 	CommandLineParser parser;
 	String[] args;
 	CommandLine cl;
+	int timeout = 0;
 
 	public ParseArgs(String[] args) {
 		this.args = args;
+		setOptions();
 	}
 
 	public void setOptions() {
 		options.addOption(Option.builder("p").longOpt("port").hasArg(true).hasArgs().required(true).desc("Port to scan").build());
-		options.addOption("s", "system", true, "System to scan");
 		options.addOption(Option.builder("s").longOpt("system").hasArgs().desc("System to scan").build());
-		options.addOption(Option.builder("h").longOpt("help").required(false).desc("Print help").build());
 		options.addOption(Option.builder("f").longOpt("file").hasArg().desc("File of hosts").build());
+		options.addOption(Option.builder("t").longOpt("timeout").hasArg().desc("Connection timeout in seconds").build());
+		options.addOption(Option.builder("h").longOpt("help").required(false).desc("Print help").build());
 		parseOptions();
 	}
 
@@ -57,8 +61,28 @@ public class ParseArgs {
 		return cl;
 	}
 
-	public String[] getPorts() {
-		return cl.getOptionValues("p");
+	public int[] getPorts() {
+		int[] ports = new int[cl.getOptionValues("p").length];
+		int i = 0;
+		
+		 for (String p : cl.getOptionValues("p")) {
+			 ports[i] = Integer.parseInt(p);
+			 i++;
+		 }
+		 Arrays.sort(ports);
+		 return ports;
+		 
+	}
+	
+	public Integer getTimeout() {
+		if (cl.hasOption("t")) {
+			timeout = Integer.parseInt(cl.getOptionValue("t"));
+			return timeout * 1000;
+		} else {
+			return timeout;
+			
+		}
+		
 	}
 
 	public String[] getServers() {

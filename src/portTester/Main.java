@@ -1,92 +1,101 @@
 package portTester;
 
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		String[] ports;
-		String[] servers;
-		String header;
-		String line;
-		HashMap<String, HashMap<Integer, String>> results;
-
-		Main m = new Main();
 		ParseArgs pr = new ParseArgs(args);
-		pr.setOptions();
-
-		ports = pr.getPorts();
+		int timeout = pr.getTimeout();
+		int [] ports = pr.getPorts();
 		Arrays.sort(ports);
-		header = m.getHeader(ports);
-		servers = pr.getServers();
+		String header = getHeader(ports);
+		String[] servers = pr.getServers();
 
-		results = m.runCheck(servers, ports);
+		HashMap<String, HashMap<Integer, Boolean>> results = PortCheck.runCheck(servers, ports, timeout);
 
 		System.out.println(header);
-		Iterator<String> it = results.keySet().iterator();
-		while (it.hasNext()) {
-			String str = it.next();
-			line = (str + ", " + m.getPortsSorted(results.get(str)));
-			System.out.println(line);
+//		Iterator<String> it = results.keySet().iterator();
+//		while (it.hasNext()) {
+//			String str = it.next();
+//			String line = (str + ", " + getPortsSorted(results.get(str)));
+//			System.out.println(line);
+//		}
+		
+		
+		for (Map.Entry<String, HashMap<Integer, Boolean>> entry : results.entrySet()) {
+		    String server = entry.getKey();
+		    HashMap<Integer, Boolean> portResults = entry.getValue();
+		    for (int port : ports) {
+		    	portResults.get(port);
+		    }
 		}
+		
 	}
 
-	private boolean IsPortOpen(String host, int port) {
+	// private boolean IsPortOpen(String host, int port, int timeout) {
+	//
+	// try {
+	// Socket ss = new Socket();
+	// ss.connect(new InetSocketAddress(host, port), timeout);
+	// ss.close();
+	// return true;
+	// }
+	// catch (Exception e) {
+	// return false;
+	// }
+	// }
 
-		try {
-			Socket ss = new Socket(host, port);
-			ss.close();
-			return true;
-		}
-		catch (Exception e) {
-			return false;
-		}
-	}
+//	private static HashMap<String, HashMap<Integer, Boolean>> runCheck(String[] servers, int[] ports, int timeout) {
+//		boolean status;
+//		HashMap<String, HashMap<Integer, Boolean>> results = new HashMap<String, HashMap<Integer, Boolean>>();
+//		PortCheck pc;
+//
+//		ExecutorService executor = Executors.newFixedThreadPool(30);
+//		for (String server : servers) {
+//			HashMap<Integer, Boolean> pp = new HashMap<Integer, Boolean>();
+//			results.put(server, pp);
+//			for (int port : ports) {
+//				Runnable worker = new PortCheck(server, port, timeout);
+//				// pc = new PortCheck(server, p, timeout);
+//				// status = IsPortOpen(server, p, timeout);
+//				executor.execute(worker);
+////				String value = status ? "Open" : "Closed";
+//				pp.put(port, status);
+//			}
+//		}
+//		executor.shutdown();
+//		try {
+//			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+//		} catch (InterruptedException e) {
+//		}
+//		return results;
+//	}
 
-	private HashMap<String, HashMap<Integer, String>> runCheck(String[] servers, String[] ports) {
-		boolean status;
-		HashMap<String, HashMap<Integer, String>> results = new HashMap<String, HashMap<Integer, String>>();
+//	private static String getPortsSorted(HashMap<Integer, String> map) {
+//		StringBuilder tline = new StringBuilder();
+//		String line;
+//		SortedMap<Integer, String> smap = new TreeMap<Integer, String>(map);
+//		Iterator<Integer> it = smap.keySet().iterator();
+//		String prefix = "";
+//		while (it.hasNext()) {
+//			int im = it.next();
+//			tline.append(prefix);
+//			prefix = ", ";
+//			tline.append(smap.get(im));
+//		}
+//		line = tline.toString();
+//		return line;
+//	}
 
-		for (String server : servers) {
-			HashMap<Integer, String> pp = new HashMap<Integer, String>();
-			results.put(server, pp);
-			for (String port : ports) {
-				int p = Integer.parseInt(port);
-				status = IsPortOpen(server, p);
-				String value = status ? "Open" : "Closed";
-				pp.put(p, value);
-			}
-		}
-		return results;
-	}
-
-	private String getPortsSorted(HashMap<Integer, String> map) {
-		StringBuilder tline = new StringBuilder();
-		String line;
-		SortedMap<Integer, String> smap = new TreeMap<Integer, String>(map);
-		Iterator<Integer> it = smap.keySet().iterator();
-		String prefix = "";
-		while (it.hasNext()) {
-			int im = it.next();
-			tline.append(prefix);
-			prefix = ", ";
-			tline.append(smap.get(im));
-		}
-		line = tline.toString();
-		return line;
-	}
-
-	private String getHeader(String[] ports) {
+	private static String getHeader(int[] ports) {
 		String header;
 		StringBuilder hh = new StringBuilder();
 		hh.append("Host, ");
-		for (String port : ports) {
+		for (int port : ports) {
 			hh.append("Port " + port + ", ");
 		}
 		header = hh.toString();
