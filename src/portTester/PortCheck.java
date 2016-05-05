@@ -33,7 +33,7 @@ public class PortCheck implements Runnable {
 			}
 		}
 		executor.shutdown();
-		
+
 		try {
 			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
@@ -54,7 +54,7 @@ public class PortCheck implements Runnable {
 
 	public static boolean IsPortOpen(String host, int port, int timeout) {
 
-//		PortCheck pc = new PortCheck(host, port, timeout);
+		// PortCheck pc = new PortCheck(host, port, timeout);
 
 		try {
 			Socket ss = new Socket();

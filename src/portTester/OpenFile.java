@@ -24,12 +24,11 @@ public class OpenFile {
 				om.append(line);
 				om.append("\n");
 			}
-		}
-		catch (FileNotFoundException fe) {
+			br.close();
+		} catch (FileNotFoundException fe) {
 			System.out.println("File does not exist " + file);
 			System.exit(1);
-		}
-		catch (IOException ie) {
+		} catch (IOException ie) {
 			System.out.println("There is issue with reading a file " + file);
 			System.exit(1);
 

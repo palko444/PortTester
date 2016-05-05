@@ -49,8 +49,7 @@ public class ParseArgs {
 			if ((cl.hasOption("s")) && (cl.hasOption("f"))) {
 				printHelp();
 			}
-		}
-		catch (ParseException e) {
+		} catch (ParseException e) {
 			printHelp();
 			// e.printStackTrace();
 		}
@@ -63,25 +62,25 @@ public class ParseArgs {
 	public int[] getPorts() {
 		int[] ports = new int[cl.getOptionValues("p").length];
 		int i = 0;
-		
-		 for (String p : cl.getOptionValues("p")) {
-			 ports[i] = Integer.parseInt(p);
-			 i++;
-		 }
-		 Arrays.sort(ports);
-		 return ports;
-		 
+
+		for (String p : cl.getOptionValues("p")) {
+			ports[i] = Integer.parseInt(p);
+			i++;
+		}
+		Arrays.sort(ports);
+		return ports;
+
 	}
-	
+
 	public Integer getTimeout() {
 		if (cl.hasOption("t")) {
 			timeout = Integer.parseInt(cl.getOptionValue("t"));
 			return timeout * 1000;
 		} else {
 			return timeout;
-			
+
 		}
-		
+
 	}
 
 	public String[] getServers() {
