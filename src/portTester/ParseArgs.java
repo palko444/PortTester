@@ -13,7 +13,6 @@ import org.apache.commons.cli.ParseException;
 public class ParseArgs {
 
 	Options options = new Options();
-	CommandLineParser parser;
 	String[] args;
 	CommandLine cl;
 	int timeout = 0;
@@ -39,7 +38,7 @@ public class ParseArgs {
 	}
 
 	public void parseOptions() {
-		parser = new DefaultParser();
+		CommandLineParser parser = new DefaultParser();
 
 		try {
 			cl = parser.parse(options, args);
