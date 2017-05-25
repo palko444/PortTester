@@ -14,7 +14,7 @@ public class ArgParser {
 
 	public static Namespace parse(String[] args) {
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("PortTester")
-				.description("Tool to test if port is open").version("00.04");
+				.description("Tool to test if port is open").version("00.05");
 		parser.addArgument("-V", "--version").help("print version of PortTester").action(Arguments.version());
 
 		parser.addArgument("-n", "--number").help("Number of parallel executions, default value 20").type(Integer.class)

@@ -12,14 +12,12 @@ public class TableFormatter implements Formatter {
 
 	@Override
 	public void print(String serverName, int port, String portStatus, String issueMessage) {
-		System.out.printf("%-" + this.longestName + "s %-" + this.longestPort + "d %-6s \n", serverName, port,
-				portStatus);
-
+		System.out.printf("%-" + this.longestName + "s %-" + this.longestPort + "d %-6s %s\n", serverName, port,
+				portStatus, issueMessage);
 	}
 
 	@Override
 	public void printHeader() {
-		// TODO Auto-generated method stub
 		System.out.printf("%-" + this.longestName + "s %-" + this.longestPort + "s %-6s %s\n", "Name", "Port", "Status",
 				"Issue");
 	}

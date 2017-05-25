@@ -2,12 +2,10 @@ package portTester;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 public class Main {
@@ -56,21 +54,16 @@ public class Main {
 		return lenght;
 	}
 
-	public static HashMap<String, HashMap<Integer, Future<String>>> execute(Formatter formatter, int number,
-			List<String> servers, List<Integer> ports, int timeout) {
+	public static void execute(Formatter formatter, int number, List<String> servers, List<Integer> ports,
+			int timeout) {
 		ExecutorService executor = Executors.newFixedThreadPool(number);
-		HashMap<String, HashMap<Integer, Future<String>>> resultsHolder = new HashMap<String, HashMap<Integer, Future<String>>>();
 		for (String server : servers) {
-			HashMap<Integer, Future<String>> portFuture = new HashMap<Integer, Future<String>>();
 			for (int port : ports) {
 				Callable<String> lala = new PortTest(formatter, server, port, timeout);
-				Future<String> future = executor.submit(lala);
-				portFuture.put(port, future);
-				resultsHolder.put(server, portFuture);
+				executor.submit(lala);
 			}
 		}
 		executor.shutdown();
-		return resultsHolder;
 	}
 
 	public static List<String> getServers(Namespace ns) throws IOException {
