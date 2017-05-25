@@ -30,15 +30,11 @@ public class Main {
 		final List<String> servers = getServers(ns);
 		final int longestName = getLongestName(servers);
 		final int longestPort = getLongestPort(ports);
-		Formatter formatter = ns.getBoolean("csv") ? new CsvFormatter() : new TableFormatter();
+		Formatter formatter = ns.getBoolean("csv") ? new CsvFormatter() : new TableFormatter(longestName, longestPort);
 		if (!ns.getBoolean("noHeader")) {
-			formatter.printHeader(longestName, longestPort);
+			formatter.printHeader();
 		}
-		// final List<Results> results = getResults(
-		// execute(longestName, longestPort, number, servers, ports, timeout));
-		// getResults(execute(longestName, longestPort, number, servers, ports,
-		// timeout));
-		execute(formatter, longestName, longestPort, number, servers, ports, timeout);
+		execute(formatter, number, servers, ports, timeout);
 
 	}
 
@@ -60,46 +56,14 @@ public class Main {
 		return lenght;
 	}
 
-	// public static List<Results> getResults(HashMap<String, HashMap<Integer,
-	// Future<String>>> resultsHolder) {
-	//
-	// List<Results> results = new ArrayList<Results>();
-	// for (Entry<String, HashMap<Integer, Future<String>>> entryName :
-	// resultsHolder.entrySet()) {
-	// String serverName = entryName.getKey();
-	// for (Entry<Integer, Future<String>> entryFuture :
-	// entryName.getValue().entrySet()) {
-	// int port = entryFuture.getKey();
-	//
-	// try {
-	// String status = entryFuture.getValue().get();
-	// if (status == null) {
-	// results.add(new Results(serverName, port, "Closed", ""));
-	// } else if (status.contentEquals("Open")) {
-	// results.add(new Results(serverName, port, "Open", ""));
-	// } else {
-	// results.add(new Results(serverName, port, "Closed", status));
-	// }
-	// } catch (InterruptedException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// } catch (ExecutionException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	// return results;
-	// }
-
-	public static HashMap<String, HashMap<Integer, Future<String>>> execute(Formatter formatter, int longestname,
-			int longestPort, int number, List<String> servers, List<Integer> ports, int timeout) {
+	public static HashMap<String, HashMap<Integer, Future<String>>> execute(Formatter formatter, int number,
+			List<String> servers, List<Integer> ports, int timeout) {
 		ExecutorService executor = Executors.newFixedThreadPool(number);
 		HashMap<String, HashMap<Integer, Future<String>>> resultsHolder = new HashMap<String, HashMap<Integer, Future<String>>>();
 		for (String server : servers) {
 			HashMap<Integer, Future<String>> portFuture = new HashMap<Integer, Future<String>>();
 			for (int port : ports) {
-				Callable<String> lala = new PortTest(formatter, longestname, longestPort, server, port, timeout);
+				Callable<String> lala = new PortTest(formatter, server, port, timeout);
 				Future<String> future = executor.submit(lala);
 				portFuture.put(port, future);
 				resultsHolder.put(server, portFuture);
